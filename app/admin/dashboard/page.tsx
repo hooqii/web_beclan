@@ -29,8 +29,11 @@ import {
   dummyProducts,
 } from "@/lib/dummy-data";
 import Link from "next/link";
+import { removeToken } from "@/app/_actions/auth";
+import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
+  const router = useRouter()
   const totalPickups = getTotalPickupsThisMonth();
   const productQuantities = getProductQuantitiesThisMonth();
   const recentPickups = getRecentPickups();
@@ -78,6 +81,11 @@ export default function AdminDashboard() {
     }).format(amount);
   };
 
+  const logout = async () => {
+    await removeToken()
+    router.push("/login")
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -95,8 +103,8 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="ml-auto flex items-center space-x-4">
-            <Button variant="outline" asChild>
-              <Link href="/">Logout</Link>
+            <Button onClick={logout} variant="outline" asChild>
+              <p className="cursor-pointer">Logout</p>
             </Button>
           </div>
         </div>

@@ -26,8 +26,11 @@ import {
   type Schedule,
 } from "@/lib/dummy-data";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { removeToken } from "@/app/_actions/auth";
 
 export default function OperatorDashboard() {
+  const router = useRouter()
   const [todaySchedules] = useState<Schedule[]>(getTodaySchedules());
   const [allSchedules] = useState<Schedule[]>(dummySchedules);
 
@@ -69,6 +72,11 @@ export default function OperatorDashboard() {
     (s) => s.status === "scheduled"
   ).length;
 
+  const logout = async () => {
+    await removeToken()
+    router.push("/login")
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -86,8 +94,8 @@ export default function OperatorDashboard() {
             </div>
           </div>
           <div className="ml-auto flex items-center space-x-4">
-            <Button variant="outline" asChild>
-              <Link href="/">Logout</Link>
+            <Button onClick={logout} variant="outline" asChild>
+              <p className="cursor-pointer">Logout</p>
             </Button>
           </div>
         </div>
