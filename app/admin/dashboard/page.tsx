@@ -5,43 +5,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Truck,
   Users,
-  Package,
   Home,
-  TrendingUp,
-  Calendar,
   MapPin,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  XCircle,
 } from "lucide-react";
-import {
-  getTotalPickupsThisMonth,
-  getProductQuantitiesThisMonth,
-  getRecentPickups,
-  dummyProducts,
-} from "@/lib/dummy-data";
 import Link from "next/link";
-import { getToken, removeToken } from "@/app/_actions/auth";
+import { getToken } from "@/app/_actions/auth";
 import DashboardCard from "./dashboard_card";
 import StatusBadge from "./status_badge";
 import LogoutButton from "./logout_button";
 import { BASE_URL } from "@/lib/constants";
 import DashboardProduk from "./dashboard_produk";
-import DashboardPenjemputan, { jsonToDashboardPenjemputan } from "./dashboard_penjemputan";
+import { jsonToDashboardPenjemputan } from "./dashboard_penjemputan";
 import Image from "next/image";
 import { format } from "date-fns";
 import { redirect } from "next/navigation";
 
 export default async function AdminDashboard() {
-  // const totalPickups = getTotalPickupsThisMonth();
-  // const productQuantities = getProductQuantitiesThisMonth();
-  // const recentPickups = getRecentPickups();
   const { totalPenjemputan, produk, recentPenjemputan } = await fetchDashboardData()
 
   const formatCurrency = (amount: number) => {
@@ -102,21 +85,6 @@ export default async function AdminDashboard() {
               value={item.total}
             />
           ))}
-          {/* <DashboardCard
-            title="Sampah Organik"
-            icon={<Package className="h-4 w-4 text-muted-foreground" />}
-            value={0}
-          />
-          <DashboardCard
-            title="Sampah Plastik"
-            icon={<Package className="h-4 w-4 text-muted-foreground" />}
-            value={0}
-          />
-          <DashboardCard
-            title="Sampah Kertas"
-            icon={<Package className="h-4 w-4 text-muted-foreground" />}
-            value={0}
-          /> */}
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -229,60 +197,6 @@ export default async function AdminDashboard() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Quick Actions
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Aksi Cepat</CardTitle>
-            <CardDescription>
-              Menu navigasi untuk fitur utama sistem
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Button
-                variant="outline"
-                className="h-20 flex-col bg-transparent"
-                asChild
-              >
-                <Link href="/admin/pickups">
-                  <Truck className="h-6 w-6 mb-2" />
-                  Penjemputan
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-20 flex-col bg-transparent"
-                asChild
-              >
-                <Link href="/admin/products">
-                  <Package className="h-6 w-6 mb-2" />
-                  Produk
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-20 flex-col bg-transparent"
-                asChild
-              >
-                <Link href="/admin/users">
-                  <Users className="h-6 w-6 mb-2" />
-                  Users
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-20 flex-col bg-transparent"
-                asChild
-              >
-                <Link href="/admin/drivers">
-                  <AlertCircle className="h-6 w-6 mb-2" />
-                  Drivers
-                </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card> */}
       </div>
     </div>
   );
