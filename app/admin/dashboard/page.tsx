@@ -15,29 +15,16 @@ import {
 import Link from "next/link";
 import { getToken } from "@/app/_actions/auth";
 import DashboardCard from "./dashboard_card";
-import StatusBadge from "./status_badge";
+import StatusBadge from "../_components/status_badge";
 import LogoutButton from "./logout_button";
 import { BASE_URL } from "@/lib/constants";
 import DashboardProduk from "./dashboard_produk";
 import { jsonToDashboardPenjemputan } from "./dashboard_penjemputan";
 import Image from "next/image";
-import { format } from "date-fns";
-import { redirect } from "next/navigation";
+import { fetchFromServer, formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function AdminDashboard() {
   const { totalPenjemputan, produk, recentPenjemputan } = await fetchDashboardData()
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const formatDate = (tanggal: Date) => {
-    return format(tanggal, "dd-MM-yyyy")
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -209,15 +196,8 @@ interface DashboardDataResponse {
 }
 
 async function fetchDashboardData() {
-  const token = await getToken()
-  const response = await fetch(`${BASE_URL}/dashboard/dashboard_admin`, {
-    headers: {"Authorization": `Bearer ${token}`}
-  })
-  if (response.status === 401) {
-    redirect("/login")
-  }
-  const json = await response.json()
-  const data = json.data as DashboardDataResponse
+  const endpoint = `${BASE_URL}/dashboard/dashboard_admin`
+  const { data } = await fetchFromServer<DashboardDataResponse>(endpoint)
   const { totalPenjemputan, produk } = data
   const recentPenjemputan = data.recentPenjemputan.map(jsonToDashboardPenjemputan)
   
