@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Card,
   CardContent,
@@ -29,49 +27,22 @@ import {
   dummyProducts,
 } from "@/lib/dummy-data";
 import Link from "next/link";
-import { removeToken } from "@/app/_actions/auth";
-import { useRouter } from "next/navigation";
+import { getToken, removeToken } from "@/app/_actions/auth";
+import DashboardCard from "./dashboard_card";
+import StatusBadge from "./status_badge";
+import LogoutButton from "./logout_button";
+import { BASE_URL } from "@/lib/constants";
+import DashboardProduk from "./dashboard_produk";
+import DashboardPenjemputan, { jsonToDashboardPenjemputan } from "./dashboard_penjemputan";
+import Image from "next/image";
+import { format } from "date-fns";
+import { redirect } from "next/navigation";
 
-export default function AdminDashboard() {
-  const router = useRouter()
-  const totalPickups = getTotalPickupsThisMonth();
-  const productQuantities = getProductQuantitiesThisMonth();
-  const recentPickups = getRecentPickups();
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "completed":
-        return (
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-            <CheckCircle className="w-3 h-3 mr-1" />
-            Selesai
-          </Badge>
-        );
-      case "in-progress":
-        return (
-          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-            <Clock className="w-3 h-3 mr-1" />
-            Berlangsung
-          </Badge>
-        );
-      case "scheduled":
-        return (
-          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
-            <Calendar className="w-3 h-3 mr-1" />
-            Terjadwal
-          </Badge>
-        );
-      case "cancelled":
-        return (
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
-            <XCircle className="w-3 h-3 mr-1" />
-            Dibatalkan
-          </Badge>
-        );
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
+export default async function AdminDashboard() {
+  // const totalPickups = getTotalPickupsThisMonth();
+  // const productQuantities = getProductQuantitiesThisMonth();
+  // const recentPickups = getRecentPickups();
+  const { totalPenjemputan, produk, recentPenjemputan } = await fetchDashboardData()
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -81,9 +52,8 @@ export default function AdminDashboard() {
     }).format(amount);
   };
 
-  const logout = async () => {
-    await removeToken()
-    router.push("/login")
+  const formatDate = (tanggal: Date) => {
+    return format(tanggal, "dd-MM-yyyy")
   }
 
   return (
@@ -103,9 +73,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="ml-auto flex items-center space-x-4">
-            <Button onClick={logout} variant="outline" asChild>
-              <p className="cursor-pointer">Logout</p>
-            </Button>
+            <LogoutButton />
           </div>
         </div>
       </div>
@@ -113,68 +81,42 @@ export default function AdminDashboard() {
       <div className="p-6">
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Penjemputan Bulan Ini
-              </CardTitle>
-              <Truck className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">
-                {totalPickups}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                <TrendingUp className="inline h-3 w-3 mr-1" />
-                +12% dari bulan lalu
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Sampah Organik
-              </CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">
-                {productQuantities["Sampah Organik"] || 0} kg
-              </div>
-              <p className="text-xs text-muted-foreground">Bulan ini</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Sampah Plastik
-              </CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">
-                {productQuantities["Sampah Plastik"] || 0} kg
-              </div>
-              <p className="text-xs text-muted-foreground">Bulan ini</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Sampah Kertas
-              </CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">
-                {productQuantities["Sampah Kertas"] || 0} kg
-              </div>
-              <p className="text-xs text-muted-foreground">Bulan ini</p>
-            </CardContent>
-          </Card>
+          <DashboardCard
+            title="Total Penjemputan"
+            icon={<Truck className="h-4 w-4 text-muted-foreground" />}
+            value={totalPenjemputan}
+            showKg={false}
+          />
+          {produk.map((item) => (
+            <DashboardCard
+              key={item.id}
+              title={item.nama}
+              icon={(
+                <Image
+                  src={item.icon}
+                  alt={item.nama}
+                  width={20}
+                  height={20}
+                />
+              )}
+              value={item.total}
+            />
+          ))}
+          {/* <DashboardCard
+            title="Sampah Organik"
+            icon={<Package className="h-4 w-4 text-muted-foreground" />}
+            value={0}
+          />
+          <DashboardCard
+            title="Sampah Plastik"
+            icon={<Package className="h-4 w-4 text-muted-foreground" />}
+            value={0}
+          />
+          <DashboardCard
+            title="Sampah Kertas"
+            icon={<Package className="h-4 w-4 text-muted-foreground" />}
+            value={0}
+          /> */}
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -188,31 +130,31 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {recentPickups.map((pickup) => (
+                {recentPenjemputan.map((pickup) => (
                   <div
                     key={pickup.id}
                     className="flex items-center justify-between p-3 border rounded-lg"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-medium">{pickup.customerName}</h4>
-                        {getStatusBadge(pickup.status)}
+                        <h4 className="font-medium">{pickup.user.nama}</h4>
+                        <StatusBadge status={pickup.status} />
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground mb-1">
                         <MapPin className="h-3 w-3 mr-1" />
-                        {pickup.customerAddress}
+                        {pickup.user.alamat}
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground">
                         <Users className="h-3 w-3 mr-1" />
-                        Driver: {pickup.driverName}
+                        Driver: {pickup.driver.nama}
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="font-semibold text-primary">
-                        {formatCurrency(pickup.totalAmount)}
+                        {formatCurrency(pickup.harga)}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {pickup.scheduledDate}
+                        {formatDate(pickup.jadwal)}
                       </div>
                     </div>
                   </div>
@@ -240,26 +182,33 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {dummyProducts.map((product) => {
-                  const quantity = productQuantities[product.name] || 0;
-                  const revenue = quantity * product.price;
+                {produk.map((item) => {
+                  const quantity = item.total;
+                  const revenue = quantity * item.harga;
                   return (
                     <div
-                      key={product.id}
+                      key={item.id}
                       className="flex items-center justify-between p-3 border rounded-lg"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="text-2xl">{product.icon}</div>
+                        <div className="text-2xl">
+                          <Image
+                            src={item.icon}
+                            alt={item.nama}
+                            width={30}
+                            height={30}
+                          />
+                        </div>
                         <div>
-                          <h4 className="font-medium">{product.name}</h4>
+                          <h4 className="font-medium">{item.nama}</h4>
                           <p className="text-sm text-muted-foreground">
-                            {formatCurrency(product.price)}/{product.unit}
+                            {formatCurrency(item.harga)}/kg
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="font-semibold">
-                          {quantity} {product.unit}
+                          {quantity} kg
                         </div>
                         <div className="text-sm text-primary">
                           {formatCurrency(revenue)}
@@ -337,4 +286,26 @@ export default function AdminDashboard() {
       </div>
     </div>
   );
+}
+
+interface DashboardDataResponse {
+  totalPenjemputan: number
+  produk: DashboardProduk[]
+  recentPenjemputan: []
+}
+
+async function fetchDashboardData() {
+  const token = await getToken()
+  const response = await fetch(`${BASE_URL}/dashboard/dashboard_admin`, {
+    headers: {"Authorization": `Bearer ${token}`}
+  })
+  if (response.status === 401) {
+    redirect("/login")
+  }
+  const json = await response.json()
+  const data = json.data as DashboardDataResponse
+  const { totalPenjemputan, produk } = data
+  const recentPenjemputan = data.recentPenjemputan.map(jsonToDashboardPenjemputan)
+  
+  return { totalPenjemputan, produk, recentPenjemputan }
 }
