@@ -2,7 +2,6 @@ import { getToken } from '@/app/_actions/auth'
 import { clsx, type ClassValue } from 'clsx'
 import { redirect } from 'next/navigation'
 import { twMerge } from 'tailwind-merge'
-import { BASE_URL } from './constants'
 import { format } from 'date-fns'
 
 export function cn(...inputs: ClassValue[]) {
@@ -21,7 +20,7 @@ export const formatDate = (tanggal: Date) => {
   return format(tanggal, "dd-MM-yyyy")
 }
 
-export const fetchFromServer = async <T = any>(endpoint: string) => {
+export const getRequest = async <T = any>(endpoint: string) => {
   const token = await getToken()
   const response = await fetch(endpoint, {
     headers: {"Authorization": `Bearer ${token}`}

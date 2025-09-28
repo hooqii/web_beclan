@@ -21,7 +21,7 @@ import { BASE_URL } from "@/lib/constants";
 import DashboardProduk from "./dashboard_produk";
 import { jsonToDashboardPenjemputan } from "./dashboard_penjemputan";
 import Image from "next/image";
-import { fetchFromServer, formatCurrency, formatDate } from "@/lib/utils";
+import { getRequest, formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function AdminDashboard() {
   const { totalPenjemputan, produk, recentPenjemputan } = await fetchDashboardData()
@@ -197,7 +197,7 @@ interface DashboardDataResponse {
 
 async function fetchDashboardData() {
   const endpoint = `${BASE_URL}/dashboard/dashboard_admin`
-  const { data } = await fetchFromServer<DashboardDataResponse>(endpoint)
+  const { data } = await getRequest<DashboardDataResponse>(endpoint)
   const { totalPenjemputan, produk } = data
   const recentPenjemputan = data.recentPenjemputan.map(jsonToDashboardPenjemputan)
   

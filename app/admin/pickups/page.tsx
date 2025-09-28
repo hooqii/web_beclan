@@ -1,7 +1,7 @@
 import { Truck } from "lucide-react"
 import PickupPageBody from "./pickup_page_body"
 import { BASE_URL } from "@/lib/constants"
-import { fetchFromServer } from "@/lib/utils"
+import { getRequest } from "@/lib/utils"
 import { jsonToPenjemputan } from "./penjemputan"
 
 export default async function PickupsPage() {
@@ -31,7 +31,7 @@ export default async function PickupsPage() {
 
 async function fetchPickups() {
   const endpoint = `${BASE_URL}/jadwal_jemput/all`
-  const { data } = await fetchFromServer<[]>(endpoint)
+  const { data } = await getRequest<[]>(endpoint)
   const pickups = data.map(jsonToPenjemputan)
   return pickups
 }
