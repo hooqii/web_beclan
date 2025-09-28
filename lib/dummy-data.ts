@@ -1,14 +1,14 @@
 // Dummy data for the waste management system
 
-export interface User {
-  id: string
-  name: string
-  email: string
-  phone: string
-  address: string
-  role: "admin" | "operator" | "customer"
-  createdAt: string
-}
+// export interface User {
+//   id: string
+//   name: string
+//   email: string
+//   phone: string
+//   address: string
+//   role: "admin" | "operator" | "customer"
+//   createdAt: string
+// }
 
 export interface Driver {
   id: string
@@ -63,35 +63,35 @@ export interface Schedule {
 }
 
 // Dummy Users
-export const dummyUsers: User[] = [
-  {
-    id: "1",
-    name: "Budi Santoso",
-    email: "budi@email.com",
-    phone: "081234567890",
-    address: "Jl. Merdeka No. 123, Bireun",
-    role: "customer",
-    createdAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    name: "Siti Nurhaliza",
-    email: "siti@email.com",
-    phone: "081234567891",
-    address: "Jl. Sudirman No. 456, Bireun",
-    role: "customer",
-    createdAt: "2024-01-20",
-  },
-  {
-    id: "3",
-    name: "Ahmad Wijaya",
-    email: "ahmad@email.com",
-    phone: "081234567892",
-    address: "Jl. Thamrin No. 789, Bireun",
-    role: "customer",
-    createdAt: "2024-02-01",
-  },
-]
+// export const dummyUsers: User[] = [
+//   {
+//     id: "1",
+//     name: "Budi Santoso",
+//     email: "budi@email.com",
+//     phone: "081234567890",
+//     address: "Jl. Merdeka No. 123, Bireun",
+//     role: "customer",
+//     createdAt: "2024-01-15",
+//   },
+//   {
+//     id: "2",
+//     name: "Siti Nurhaliza",
+//     email: "siti@email.com",
+//     phone: "081234567891",
+//     address: "Jl. Sudirman No. 456, Bireun",
+//     role: "customer",
+//     createdAt: "2024-01-20",
+//   },
+//   {
+//     id: "3",
+//     name: "Ahmad Wijaya",
+//     email: "ahmad@email.com",
+//     phone: "081234567892",
+//     address: "Jl. Thamrin No. 789, Bireun",
+//     role: "customer",
+//     createdAt: "2024-02-01",
+//   },
+// ]
 
 // Dummy Drivers
 export const dummyDrivers: Driver[] = [
