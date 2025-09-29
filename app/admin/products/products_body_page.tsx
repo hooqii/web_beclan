@@ -99,7 +99,7 @@ export default function ProductsBodyPage({ products: defaultProducts }: Products
       body: data
     })
     if (response.status === 200) refreshProducts()
-    setFormData({ nama: "", harga: "", icon: null })
+    clearForm()
     setEditingProduct(null)
     setIsEditDialogOpen(false)
   }
@@ -113,6 +113,20 @@ export default function ProductsBodyPage({ products: defaultProducts }: Products
       })
       refreshProducts()
     }
+  }
+
+  const clearForm = () => {
+    setFormData({ nama: "", harga: "", icon: null })
+  }
+  
+  const handleAddOpenChange = (open: boolean) => {
+    if (!open) clearForm()
+    setIsAddDialogOpen(open)
+  }
+
+  const handleEditOpenChange = (open: boolean) => {
+    if (!open) clearForm()
+    setIsEditDialogOpen(open)
   }
 
   return (
@@ -134,7 +148,7 @@ export default function ProductsBodyPage({ products: defaultProducts }: Products
                   className="pl-8 w-64"
                 />
               </div>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <Dialog open={isAddDialogOpen} onOpenChange={handleAddOpenChange}>
                 <DialogTrigger asChild>
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />
@@ -171,7 +185,7 @@ export default function ProductsBodyPage({ products: defaultProducts }: Products
                       <IconPicker formData={formData} setFormData={setFormData} />
                     </div>
                     <div className="flex justify-end space-x-2">
-                      <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                      <Button variant="outline" onClick={() => handleAddOpenChange(false)}>
                         Batal
                       </Button>
                       <Button onClick={handleAdd}>Tambah</Button>
@@ -223,7 +237,7 @@ export default function ProductsBodyPage({ products: defaultProducts }: Products
       </Card>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Dialog open={isEditDialogOpen} onOpenChange={handleEditOpenChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Produk</DialogTitle>
@@ -252,7 +266,7 @@ export default function ProductsBodyPage({ products: defaultProducts }: Products
               <IconPicker formData={formData} setFormData={setFormData} />
             </div>
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              <Button variant="outline" onClick={() => handleEditOpenChange(false)}>
                 Batal
               </Button>
               <Button onClick={handleUpdate}>Update</Button>

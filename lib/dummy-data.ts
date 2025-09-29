@@ -10,15 +10,15 @@
 //   createdAt: string
 // }
 
-export interface Driver {
-  id: string
-  name: string
-  phone: string
-  licenseNumber: string
-  vehicleNumber: string
-  status: "active" | "inactive"
-  createdAt: string
-}
+// export interface Driver {
+//   id: string
+//   name: string
+//   phone: string
+//   licenseNumber: string
+//   vehicleNumber: string
+//   status: "active" | "inactive"
+//   createdAt: string
+// }
 
 export interface Product {
   id: string
@@ -94,35 +94,35 @@ export interface Schedule {
 // ]
 
 // Dummy Drivers
-export const dummyDrivers: Driver[] = [
-  {
-    id: "1",
-    name: "Joko Susilo",
-    phone: "081234567893",
-    licenseNumber: "B1234567890",
-    vehicleNumber: "B 1234 ABC",
-    status: "active",
-    createdAt: "2024-01-10",
-  },
-  {
-    id: "2",
-    name: "Andi Pratama",
-    phone: "081234567894",
-    licenseNumber: "B1234567891",
-    vehicleNumber: "B 5678 DEF",
-    status: "active",
-    createdAt: "2024-01-12",
-  },
-  {
-    id: "3",
-    name: "Rudi Hermawan",
-    phone: "081234567895",
-    licenseNumber: "B1234567892",
-    vehicleNumber: "B 9012 GHI",
-    status: "inactive",
-    createdAt: "2024-01-15",
-  },
-]
+// export const dummyDrivers: Driver[] = [
+//   {
+//     id: "1",
+//     name: "Joko Susilo",
+//     phone: "081234567893",
+//     licenseNumber: "B1234567890",
+//     vehicleNumber: "B 1234 ABC",
+//     status: "active",
+//     createdAt: "2024-01-10",
+//   },
+//   {
+//     id: "2",
+//     name: "Andi Pratama",
+//     phone: "081234567894",
+//     licenseNumber: "B1234567891",
+//     vehicleNumber: "B 5678 DEF",
+//     status: "active",
+//     createdAt: "2024-01-12",
+//   },
+//   {
+//     id: "3",
+//     name: "Rudi Hermawan",
+//     phone: "081234567895",
+//     licenseNumber: "B1234567892",
+//     vehicleNumber: "B 9012 GHI",
+//     status: "inactive",
+//     createdAt: "2024-01-15",
+//   },
+// ]
 
 // Dummy Products
 export const dummyProducts: Product[] = [
