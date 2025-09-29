@@ -32,7 +32,7 @@ export default function OperatorLayout({
             </Link>
           </Button>
           <Button variant="outline" className="justify-start" asChild>
-            <Link href="/operator/waste-input">
+            <Link href="/operator/waste_input">
               <Package className="h-5 w-5 mr-2" />
               Input Sampah
             </Link>

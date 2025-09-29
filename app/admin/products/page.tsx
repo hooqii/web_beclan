@@ -2,7 +2,7 @@ import { Package } from "lucide-react"
 import ProductsBodyPage from "./products_body_page"
 import { BASE_URL } from "@/lib/constants"
 import { getRequest } from "@/lib/utils"
-import Produk from "./produk"
+import Produk from "../../_types/produk"
 
 export default async function ProductsPage() {
   const products = await fetchProducts()

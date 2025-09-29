@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog"
 import { Plus, Edit, Trash2, Search } from "lucide-react"
 import { useState } from "react"
-import Produk from "./produk"
+import Produk from "../../_types/produk"
 import Image from "next/image"
 import IconPicker from "./icon_picker"
 import { BASE_URL } from "@/lib/constants"
