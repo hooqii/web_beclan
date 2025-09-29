@@ -2,7 +2,7 @@ import { Car } from "lucide-react"
 import DriversBodyPage from "./drivers_page_body"
 import { BASE_URL } from "@/lib/constants"
 import { getRequest } from "@/lib/utils"
-import Driver, { driverFromJson } from "./driver"
+import Driver, { driverFromJson } from "../../_types/driver"
 
 export default async function DriversPage() {
   const drivers = await fetchDrivers()

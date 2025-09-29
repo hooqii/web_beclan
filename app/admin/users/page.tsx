@@ -1,7 +1,7 @@
 import { BASE_URL } from "@/lib/constants"
 import { getRequest } from "@/lib/utils"
 import { Users } from "lucide-react"
-import User, { userFromJson } from "./user"
+import User, { userFromJson } from "../../_types/user"
 import UsersBodyPage from "./users_body_page"
 
 export default async function UsersPage() {

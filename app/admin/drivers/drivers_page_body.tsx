@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Plus, Edit, Trash2, Search, Phone, Truck, Mail } from "lucide-react"
-import Driver, { driverFromJson } from "./driver"
+import Driver, { driverFromJson } from "../../_types/driver"
 import { BASE_URL } from "@/lib/constants"
 import { getRequest } from "@/lib/utils"
 import { getToken } from "@/app/_actions/auth"
