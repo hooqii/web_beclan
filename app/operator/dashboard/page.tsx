@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,74 +5,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Calendar,
-  Clock,
   MapPin,
   CheckCircle,
   AlertCircle,
   Users,
   Truck,
-  Package,
 } from "lucide-react";
-import {
-  getTodaySchedules,
-  dummySchedules,
-  type Schedule,
-} from "@/lib/dummy-data";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { removeToken } from "@/app/_actions/auth";
+import StatusBadge from "@/app/admin/_components/status_badge";
+import { jadwalFromJson } from "../_types/jadwal";
+import { BASE_URL } from "@/lib/constants";
+import { formatDate, formatHours, getRequest } from "@/lib/utils";
+import LogoutButton from "./logout_button";
 
-export default function OperatorDashboard() {
-  const router = useRouter()
-  const [todaySchedules] = useState<Schedule[]>(getTodaySchedules());
-  const [allSchedules] = useState<Schedule[]>(dummySchedules);
+export default async function OperatorDashboard() {
+  const { recentAktivitas, jadwalHariIni } = await fetchDashboardData()
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "completed":
-        return (
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-            <CheckCircle className="w-3 h-3 mr-1" />
-            Selesai
-          </Badge>
-        );
-      case "in-progress":
-        return (
-          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-            <Clock className="w-3 h-3 mr-1" />
-            Berlangsung
-          </Badge>
-        );
-      case "scheduled":
-        return (
-          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
-            <Calendar className="w-3 h-3 mr-1" />
-            Terjadwal
-          </Badge>
-        );
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
-
-  const completedToday = todaySchedules.filter(
-    (s) => s.status === "completed"
+  const completedToday = jadwalHariIni.filter(
+    (s) => s.status === "Selesai"
   ).length;
-  const inProgressToday = todaySchedules.filter(
-    (s) => s.status === "in-progress"
+  const scheduledToday = jadwalHariIni.filter(
+    (s) => s.status === "Terjadwal"
   ).length;
-  const scheduledToday = todaySchedules.filter(
-    (s) => s.status === "scheduled"
-  ).length;
-
-  const logout = async () => {
-    await removeToken()
-    router.push("/login")
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -94,9 +48,7 @@ export default function OperatorDashboard() {
             </div>
           </div>
           <div className="ml-auto flex items-center space-x-4">
-            <Button onClick={logout} variant="outline" asChild>
-              <p className="cursor-pointer">Logout</p>
-            </Button>
+            <LogoutButton />
           </div>
         </div>
       </div>
@@ -113,7 +65,7 @@ export default function OperatorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-primary">
-                {todaySchedules.length}
+                {jadwalHariIni.length}
               </div>
               <p className="text-xs text-muted-foreground">Total penjemputan</p>
             </CardContent>
@@ -136,21 +88,6 @@ export default function OperatorDashboard() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Berlangsung</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
-                {inProgressToday}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Sedang berlangsung
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Terjadwal</CardTitle>
               <AlertCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -158,7 +95,7 @@ export default function OperatorDashboard() {
               <div className="text-2xl font-bold text-yellow-600">
                 {scheduledToday}
               </div>
-              <p className="text-xs text-muted-foreground">Menunggu eksekusi</p>
+              <p className="text-xs text-muted-foreground">Menunggu penjemputan</p>
             </CardContent>
           </Card>
         </div>
@@ -179,8 +116,8 @@ export default function OperatorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {todaySchedules.length > 0 ? (
-                  todaySchedules.map((schedule) => (
+                {jadwalHariIni.length > 0 ? (
+                  jadwalHariIni.map((schedule, index) => (
                     <div
                       key={schedule.id}
                       className="flex items-center justify-between p-4 border rounded-lg"
@@ -188,28 +125,22 @@ export default function OperatorDashboard() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="font-medium">
-                            {schedule.customerName}
+                            {schedule.user.nama}
                           </h4>
-                          {getStatusBadge(schedule.status)}
+                          <StatusBadge status={schedule.status} />
                         </div>
                         <div className="flex items-center text-sm text-muted-foreground mb-1">
                           <MapPin className="h-3 w-3 mr-1" />
-                          {schedule.customerAddress}
+                          {schedule.user.alamat}
                         </div>
                         <div className="flex items-center text-sm text-muted-foreground mb-1">
                           <Truck className="h-3 w-3 mr-1" />
-                          Driver: {schedule.driverName}
+                          Driver: {schedule.driver.nama}
                         </div>
-                        {schedule.notes && (
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Package className="h-3 w-3 mr-1" />
-                            {schedule.notes}
-                          </div>
-                        )}
                       </div>
                       <div className="text-right">
                         <div className="font-semibold text-primary">
-                          {schedule.timeSlot}
+                          {formatHours(schedule.jadwal)}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           #{schedule.id}
@@ -246,7 +177,7 @@ export default function OperatorDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {allSchedules.slice(0, 5).map((schedule) => (
+                {recentAktivitas.map((schedule) => (
                   <div
                     key={schedule.id}
                     className="flex items-center justify-between p-3 border rounded-lg"
@@ -256,16 +187,16 @@ export default function OperatorDashboard() {
                         <Truck className="h-4 w-4 text-primary" />
                       </div>
                       <div>
-                        <h4 className="font-medium">{schedule.customerName}</h4>
+                        <h4 className="font-medium">{schedule.user.nama}</h4>
                         <p className="text-sm text-muted-foreground">
-                          {schedule.driverName} • {schedule.timeSlot}
+                          {schedule.driver.nama} • {formatHours(schedule.jadwal)}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      {getStatusBadge(schedule.status)}
+                      <StatusBadge status={schedule.status} />
                       <div className="text-xs text-muted-foreground mt-1">
-                        {schedule.scheduledDate}
+                        {formatDate(schedule.jadwal)}
                       </div>
                     </div>
                   </div>
@@ -279,4 +210,17 @@ export default function OperatorDashboard() {
       </div>
     </div>
   );
+}
+
+interface DashboardDataResponse {
+  recentAktivitas: {[key: string]: any}[]
+  jadwalHariIni: {[key: string]: any}[]
+}
+
+async function fetchDashboardData() {
+  const endpoint = `${BASE_URL}/dashboard/dashboard_operator`
+  const response  = await getRequest<DashboardDataResponse>(endpoint)
+  const recentAktivitas = response.data.recentAktivitas.map(jadwalFromJson)
+  const jadwalHariIni = response.data.jadwalHariIni.map(jadwalFromJson)
+  return { recentAktivitas, jadwalHariIni }
 }

@@ -1,24 +1,24 @@
 // Dummy data for the waste management system
 
-// export interface User {
-//   id: string
-//   name: string
-//   email: string
-//   phone: string
-//   address: string
-//   role: "admin" | "operator" | "customer"
-//   createdAt: string
-// }
+export interface User {
+  id: string
+  name: string
+  email: string
+  phone: string
+  address: string
+  role: "admin" | "operator" | "customer"
+  createdAt: string
+}
 
-// export interface Driver {
-//   id: string
-//   name: string
-//   phone: string
-//   licenseNumber: string
-//   vehicleNumber: string
-//   status: "active" | "inactive"
-//   createdAt: string
-// }
+export interface Driver {
+  id: string
+  name: string
+  phone: string
+  licenseNumber: string
+  vehicleNumber: string
+  status: "active" | "inactive"
+  createdAt: string
+}
 
 export interface Product {
   id: string
@@ -63,66 +63,66 @@ export interface Schedule {
 }
 
 // Dummy Users
-// export const dummyUsers: User[] = [
-//   {
-//     id: "1",
-//     name: "Budi Santoso",
-//     email: "budi@email.com",
-//     phone: "081234567890",
-//     address: "Jl. Merdeka No. 123, Bireun",
-//     role: "customer",
-//     createdAt: "2024-01-15",
-//   },
-//   {
-//     id: "2",
-//     name: "Siti Nurhaliza",
-//     email: "siti@email.com",
-//     phone: "081234567891",
-//     address: "Jl. Sudirman No. 456, Bireun",
-//     role: "customer",
-//     createdAt: "2024-01-20",
-//   },
-//   {
-//     id: "3",
-//     name: "Ahmad Wijaya",
-//     email: "ahmad@email.com",
-//     phone: "081234567892",
-//     address: "Jl. Thamrin No. 789, Bireun",
-//     role: "customer",
-//     createdAt: "2024-02-01",
-//   },
-// ]
+export const dummyUsers: User[] = [
+  {
+    id: "1",
+    name: "Budi Santoso",
+    email: "budi@email.com",
+    phone: "081234567890",
+    address: "Jl. Merdeka No. 123, Bireun",
+    role: "customer",
+    createdAt: "2024-01-15",
+  },
+  {
+    id: "2",
+    name: "Siti Nurhaliza",
+    email: "siti@email.com",
+    phone: "081234567891",
+    address: "Jl. Sudirman No. 456, Bireun",
+    role: "customer",
+    createdAt: "2024-01-20",
+  },
+  {
+    id: "3",
+    name: "Ahmad Wijaya",
+    email: "ahmad@email.com",
+    phone: "081234567892",
+    address: "Jl. Thamrin No. 789, Bireun",
+    role: "customer",
+    createdAt: "2024-02-01",
+  },
+]
 
 // Dummy Drivers
-// export const dummyDrivers: Driver[] = [
-//   {
-//     id: "1",
-//     name: "Joko Susilo",
-//     phone: "081234567893",
-//     licenseNumber: "B1234567890",
-//     vehicleNumber: "B 1234 ABC",
-//     status: "active",
-//     createdAt: "2024-01-10",
-//   },
-//   {
-//     id: "2",
-//     name: "Andi Pratama",
-//     phone: "081234567894",
-//     licenseNumber: "B1234567891",
-//     vehicleNumber: "B 5678 DEF",
-//     status: "active",
-//     createdAt: "2024-01-12",
-//   },
-//   {
-//     id: "3",
-//     name: "Rudi Hermawan",
-//     phone: "081234567895",
-//     licenseNumber: "B1234567892",
-//     vehicleNumber: "B 9012 GHI",
-//     status: "inactive",
-//     createdAt: "2024-01-15",
-//   },
-// ]
+export const dummyDrivers: Driver[] = [
+  {
+    id: "1",
+    name: "Joko Susilo",
+    phone: "081234567893",
+    licenseNumber: "B1234567890",
+    vehicleNumber: "B 1234 ABC",
+    status: "active",
+    createdAt: "2024-01-10",
+  },
+  {
+    id: "2",
+    name: "Andi Pratama",
+    phone: "081234567894",
+    licenseNumber: "B1234567891",
+    vehicleNumber: "B 5678 DEF",
+    status: "active",
+    createdAt: "2024-01-12",
+  },
+  {
+    id: "3",
+    name: "Rudi Hermawan",
+    phone: "081234567895",
+    licenseNumber: "B1234567892",
+    vehicleNumber: "B 9012 GHI",
+    status: "inactive",
+    createdAt: "2024-01-15",
+  },
+]
 
 // Dummy Products
 export const dummyProducts: Product[] = [

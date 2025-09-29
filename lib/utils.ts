@@ -20,6 +20,10 @@ export const formatDate = (tanggal: Date) => {
   return format(tanggal, "dd-MM-yyyy")
 }
 
+export const formatHours = (tanggal: Date) => {
+  return format(tanggal, "HH:mm")
+}
+
 export const getRequest = async <T = any>(endpoint: string) => {
   const token = await getToken()
   const response = await fetch(endpoint, {
